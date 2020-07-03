@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Yorks Times</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <style>
+    .cardimage{
+    height: 400px !important;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col text-left bg-black">
+                <div class=" text-center"><img src="ny.jpg" alt="logo" class="img-fluid"></div>
+                <div><h2>Arts</h2></div>
+                <div><b><p id="date">/p></b>
+                <hr>
+                </div>
+                <div class="text-left">
+                    <button class="btn btn-light" onclick="location.href='index.html';">Home</button>
+                    <button class="btn btn-light" onclick="location.href='world.html';">World</button>
+                    <button class="btn btn-light" onclick="location.href='us.html';">U.S.</button>
+                    <button class="btn btn-light" onclick="location.href='science.html';">Science</button>
+                    <button class="btn btn-light" onclick="location.href='arts.html';">Arts</button>
+                    <hr style="border-color:inherit">
+                </div>
+            </div>
+        </div>
+        <div class="row" id="row2">
+        </div>
+    </div>
+    <script>
+n=new Date();
+y=n.getFullYear();
+m=n.getMonth();
+d=n.getDate();
+document.getElementById("date").innerHTML="Today's News"+" "+m+"-"+d+"-"+y;
+let url="https://api.nytimes.com/svc/topstories/v2/arts.json?api-key=yuvO5scmvpTLYuCtGnRQLvbOZxrmWTRh"
+async function artSection(){
+    try{
+    var response=await fetch(url);
+    var homeData=await response.json();
+    console.log(homeData);
+    return homeData;
+    }
+    catch{
+        console.log("something went wrong");    
+    }
+    
+}
+artSection().then(homeData=>{
+  // document.getElementById("copyRight").innerHTML=homeData.copyright;
+
+   //getting all data 
+    homeData.results.forEach(element => {
+    //column
+    var column=document.createElement("div");
+    column.setAttribute("class","col-sm-6 col-lg-6");
+    column.innerHTML=`<div class="card mb-3" style="max-width: 540px;">
+    <div class="row no-gutters">
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title text-primary">${element.section}</h5>
+          <p class="card-text"><h4>${element.title}</h4></p>
+          <p class="card-text">${element.abstract}</p>
+          <p class="card-text">${element.byline}</p>
+          <p class="card-text"><small class="text-muted">${element.created_date}<br>${element.item_type}</small>
+          <a href="${element.short_url}" class="text-primary">continue reading</a>
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <img src="${element.multimedia[4].url}" class="card-img cardimage" alt="...">
+      </div>
+    </div>
+    </div>`
+   // row.appendChild(column); 
+    document.querySelector("#row2").appendChild(column);
+    }); 
+}).catch(err=>{
+  alert(err)
+})
+</script>
+</body>
+</html>
